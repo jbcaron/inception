@@ -21,7 +21,6 @@ Vagrant.configure("2") do |config|
 	config.vm.synced_folder "./", "/inception/"
 
 	config.vm.provision "ansible" do |as|
-		#as.raw_arguments = "-v"
 		as.playbook = "playbook.yml"
 		as.extra_vars = {
 			"user_name" => ENV['VM_USER'],
