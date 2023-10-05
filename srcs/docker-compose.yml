@@ -1,0 +1,71 @@
+version: '3'
+
+services:
+  php-fpm:
+    build: php-fpm
+    container_name: php-fpm
+    depends_on:
+      - mariadb
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "php-fpm81", "-t"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    env_file: .env
+    volumes:
+      - wordpress:/var/www/html
+    networks:
+      - backend
+
+  nginx:
+    build: nginx
+    container_name: nginx
+    depends_on:
+      - php-fpm
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-kf", "https://localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    env_file: .env
+    volumes:
+      - wordpress:/var/www/html
+    ports:
+      - "443:443"
+    networks:
+      - backend
+
+  mariadb:
+    build: mariadb
+    container_name: mariadb
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    env_file: .env
+    volumes:
+      - mariadb:/var/lib/mysql
+    networks:
+      - backend
+
+networks:
+  backend:
+    name: backend-wordpress
+
+volumes:
+  wordpress:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/${USER}/data/wordpress
+  mariadb:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/${USER}/data/mariadb

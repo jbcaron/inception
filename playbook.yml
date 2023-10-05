@@ -1,0 +1,56 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Update apt
+      apt:
+        update_cache: yes
+        cache_valid_time: 86400
+
+    - name: Install development packages
+      apt:
+        name:
+        - git
+        - make
+        - docker.io 
+        - docker-compose
+        state: present
+
+    - name: Install web browser
+      apt:
+        name: chromium
+        state: present
+
+    - name: Install graphic environnement
+      apt:
+        name:
+        - kde-standard
+        state: present
+
+    - name: Activate docker service at started
+      systemd:
+        name: docker
+        enabled: yes
+
+    - name: New sudo user
+      user:
+        name: "{{user_name}}"
+        password: "{{password}}"
+        groups: 
+          - sudo
+          - docker
+        state: present
+        shell: /bin/bash
+        createhome: yes
+    
+    - name: Reboot for gui to work
+      reboot:
+        msg: "Rebooting the server"
+        connect_timeout: 120
+        reboot_timeout: 120
+        pre_reboot_delay: 0
+        post_reboot_delay: 30
+        test_command: uptime
+
+    - name: Start docker service
+      shell: sudo -u {{user_name}} make -C /inception/
