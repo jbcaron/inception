@@ -1,5 +1,18 @@
 # Inception :rocket:
 
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [Prerequisites](#prerequisites)
+- [Docker Configuration](#docker-images-and-docker-compose-configuration)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+	- [Connection to the VM](#connection-to-the-vm)
+	- [Accessing WordPress](#accessing-wordpress)
+- [Folder Structure](#folder-structure)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Project Overview
 Inception is designed to simplify the setup of a complete development environment for WordPress by automating the creation of a virtual machine (VM) and the deployment of necessary containers. It aims to streamline the development process and accelerate WordPress development tasks.
 
